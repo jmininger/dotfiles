@@ -1,0 +1,66 @@
+format = """
+$time\
+$username\
+[@](bold purple)\
+$directory\
+$git_branch \
+$git_status\
+$git_commit\
+$rust\
+$package\
+$haskell\
+$cmd_duration
+$character\
+"""
+
+[character]
+success_symbol = '[](purple)'
+error_symbol = '[](bold red)'
+
+[time]
+format = '[\[$time\]]($style) '
+time_format = '%H:%M'
+style = 'bold white'
+disabled = false
+
+[username]
+style_user = 'bold green'
+style_root = 'bold purple'
+format = '[$user]($style)'
+disabled = false
+show_always = true
+aliases = { 'jmininger' = 'jm' }
+
+[directory]
+format = '[$path]($style)[$read_only]($read_only_style)'
+style = 'bold blue'
+
+[git_branch]
+symbol = ' '
+style = 'bold yellow'
+format = '[:](style black)[$branch]($style)'
+
+[git_commit]
+tag_disabled = false
+tag_symbol = '  '
+style = 'yellow'
+
+[cmd_duration]
+style = 'bold cyan'
+
+[rust]
+format = '[$symbol($version)]($style) '
+
+[haskell]
+format = '[$symbol($version)]($style) '
+
+# [custom.cargo_status]
+# command = '[[ -d "$PWD/target" ]] && echo "🚀 Built" || echo "🔧 Not Built"'
+# when = 'test -f "Cargo.toml"'
+# style = "bold green"
+# format = '[$output]($style)  '
+
+[package]
+symbol = "📦 "
+display_private = true        # Show private packages
+style = "bold blue"

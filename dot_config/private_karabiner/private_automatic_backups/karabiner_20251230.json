@@ -1,0 +1,40 @@
+{
+    "profiles": [
+        {
+            "name": "Default",
+            "selected": true,
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Caps Lock → Ctrl in terminals, Cmd elsewhere",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "caps_lock" },
+                                "to": [{ "key_code": "left_control" }],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_if",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^io\\.alacritty$",
+                                            "^com\\.github\\.wez\\.wezterm$",
+                                            "^net\\.kovidgoyal\\.kitty$",
+                                            "^com\\.mitchellh\\.ghostty$"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "caps_lock" },
+                                "to": [{ "key_code": "left_command" }]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

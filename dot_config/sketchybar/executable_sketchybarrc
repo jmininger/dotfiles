@@ -1,0 +1,179 @@
+#!/bin/bash
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+##### Catppuccin Mocha Colors #####
+export BAR_COLOR=0xee1e1e2e
+export SURFACE0=0xff313244
+export SURFACE1=0xff45475a
+export OVERLAY0=0xff6c7086
+export TEXT=0xffcdd6f4
+export SUBTEXT=0xffa6adc8
+export MAUVE=0xffcba6f7
+export BLUE=0xff89b4fa
+export SAPPHIRE=0xff74c7ec
+export GREEN=0xffa6e3a1
+export PEACH=0xfffab387
+export RED=0xfff38ba8
+export YELLOW=0xfff9e2af
+export TRANSPARENT=0x00000000
+
+##### Bar Appearance #####
+sketchybar --bar position=top \
+                 height=37 \
+                 blur_radius=30 \
+                 color=$BAR_COLOR \
+                 margin=0 \
+                 y_offset=0 \
+                 padding_left=10 \
+                 padding_right=10
+
+##### Changing Defaults #####
+default=(
+  padding_left=4
+  padding_right=4
+  icon.font="Hack Nerd Font:Bold:14.0"
+  label.font="Hack Nerd Font:Bold:13.0"
+  icon.color=$TEXT
+  label.color=$TEXT
+  icon.padding_left=6
+  icon.padding_right=4
+  label.padding_left=4
+  label.padding_right=6
+  background.height=26
+  background.corner_radius=8
+)
+sketchybar --default "${default[@]}"
+
+##### Left Bracket - Workspaces #####
+sketchybar --add bracket workspaces_bracket space.1 space.2 space.3 space.4 space.5 space.6 space.7 space.8 space.9 \
+           --set workspaces_bracket background.color=$SURFACE0 \
+                                     background.corner_radius=10 \
+                                     background.height=28 \
+                                     background.drawing=on
+
+##### AeroSpace Workspaces #####
+for sid in 1 2 3 4 5 6 7 8 9; do
+  sketchybar --add item space.$sid left \
+             --set space.$sid icon="$sid" \
+                              icon.padding_left=10 \
+                              icon.padding_right=10 \
+                              background.color=$MAUVE \
+                              background.corner_radius=6 \
+                              background.height=22 \
+                              background.drawing=off \
+                              label.drawing=off \
+                              click_script="aerospace workspace $sid"
+done
+
+##### Highlight active workspace #####
+sketchybar --add event aerospace_workspace_change
+
+for sid in 1 2 3 4 5 6 7 8 9; do
+  sketchybar --subscribe space.$sid aerospace_workspace_change \
+             --set space.$sid script="$PLUGIN_DIR/aerospace.sh"
+done
+
+##### Separator #####
+sketchybar --add item separator_left left \
+           --set separator_left icon="" \
+                                icon.color=$OVERLAY0 \
+                                icon.font="Hack Nerd Font:Bold:16.0" \
+                                icon.padding_left=8 \
+                                icon.padding_right=4 \
+                                background.drawing=off \
+                                label.drawing=off
+
+##### Front App #####
+sketchybar --add item front_app left \
+           --set front_app icon.drawing=off \
+                          label.color=$TEXT \
+                          script="$PLUGIN_DIR/front_app.sh" \
+           --subscribe front_app front_app_switched
+
+##### Right Side (left to right: clock, wifi, battery, stats, notifs) #####
+
+# Focus Mode
+sketchybar --add item focus right \
+           --set focus icon="󰍷" \
+                       icon.color=$OVERLAY0 \
+                       label.drawing=off \
+                       background.color=$SURFACE0 \
+                       background.corner_radius=10 \
+                       background.height=28 \
+                       background.drawing=on \
+                       update_freq=5 \
+                       script="$PLUGIN_DIR/focus.sh"
+
+# Notifications (rightmost - added first)
+sketchybar --add item signal right \
+           --set signal update_freq=5 \
+                        updates=on \
+                        icon.font="sketchybar-app-font:Regular:14.0" \
+                        icon.color=$SAPPHIRE \
+                        script="$PLUGIN_DIR/signal.sh" \
+           --add item slack right \
+           --set slack update_freq=5 \
+                       updates=on \
+                       icon.font="sketchybar-app-font:Regular:14.0" \
+                       icon.color=$MAUVE \
+                       script="$PLUGIN_DIR/slack.sh"
+
+# System Stats
+sketchybar --add item cpu right \
+           --set cpu icon="󰻠" \
+                     icon.color=$RED \
+                     update_freq=5 \
+                     script="$PLUGIN_DIR/cpu.sh" \
+           --add item memory right \
+           --set memory icon="󰍛" \
+                        icon.color=$YELLOW \
+                        update_freq=5 \
+                        script="$PLUGIN_DIR/memory.sh" \
+           --add item disk right \
+           --set disk icon="󰋊" \
+                      icon.color=$PEACH \
+                      update_freq=60 \
+                      script="$PLUGIN_DIR/disk.sh"
+
+sketchybar --add bracket stats_bracket disk memory cpu \
+           --set stats_bracket background.color=$SURFACE0 \
+                               background.corner_radius=10 \
+                               background.height=28 \
+                               background.drawing=on
+
+# Battery
+sketchybar --add item battery right \
+           --set battery icon.color=$GREEN \
+                         background.color=$SURFACE0 \
+                         background.corner_radius=10 \
+                         background.height=28 \
+                         background.drawing=on \
+                         update_freq=120 \
+                         script="$PLUGIN_DIR/battery.sh" \
+           --subscribe battery system_woke power_source_change
+
+# WiFi
+sketchybar --add item wifi right \
+           --set wifi icon="󰖩" \
+                      icon.color=$SAPPHIRE \
+                      background.color=$SURFACE0 \
+                      background.corner_radius=10 \
+                      background.height=28 \
+                      background.drawing=on \
+                      update_freq=10 \
+                      script="$PLUGIN_DIR/wifi.sh"
+
+# Clock (leftmost on right side - added last)
+sketchybar --add item clock right \
+           --set clock icon="󰥔" \
+                       icon.color=$BLUE \
+                       background.color=$SURFACE0 \
+                       background.corner_radius=10 \
+                       background.height=28 \
+                       background.drawing=on \
+                       update_freq=10 \
+                       script="$PLUGIN_DIR/clock.sh"
+
+##### Force all scripts to run the first time #####
+sketchybar --update
