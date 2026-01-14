@@ -79,6 +79,8 @@ on-mode-changed = []
     inner.vertical =   10
     outer.left =       10
     outer.bottom =     10
+    # outer.top =        10  # use 47 for sketchybar: 37 (bar height) + 10 (gap)
+    # outer.top =        37
     outer.top =        10
     outer.right =      10
 
