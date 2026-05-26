@@ -1,0 +1,99 @@
+-- local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+-- parser_config.noir = {
+--     install_info = {
+--         url = "https://github.com/hhamud/tree-sitter-noir", -- the url for this tree-sitter grammar
+--         files = {"src/parser.c", "src/scanner.cc"},
+--     },
+--     filetype = "noir", -- if filetype does not agrees with parser name you can define this field
+-- }
+return require'nvim-treesitter.configs'.setup {
+  -- A list of parser names, or "all" (the four listed parsers should always be installed)
+  -- ensure_installed = { "javascript", "typescript", "haskell", "c", "lua", "vim", "help", "solidity", "rust", "nix", "noir"},
+  ensure_installed = { "javascript", "typescript", "haskell", "c", "lua", "vim", "help", "solidity", "rust", "nix"},
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+  auto_install = true,
+
+  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+
+  textobjects = {
+    select = {
+      enable = true,
+      -- Automatically jump forward to textobj, similar to targets.vim
+      lookahead = true,
+      keymaps = {
+        -- You can use the capture groups defined in textobjects.scm
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["gi"] = "@item",
+        ["ad"] = "@class.outer",
+        ["id"] = "@class.inner",
+			}
+		},
+
+   move = {
+      enable = true,
+      goto_previous = {
+        ["[d"] = "@class.outer",
+        ["[f"] = "@function.outer",
+        -- ["<leader>d"] = "@class.outer",
+        -- Add your custom mapping here
+        -- ["<leader>n"] = "@structure.outer",
+      },
+      goto_next_start = {
+        ["]d"] = "@class.outer",
+        ["]f"] = "@function.outer",
+        -- ["<leader>d"] = "@class.outer",
+        -- Add your custom mapping here
+        -- ["<leader>n"] = "@structure.outer",
+      },
+      goto_next_end = {
+        ["]D"] = "@class.outer",
+        -- ["<leader>D"] = "@class.outer",
+        -- Add your custom mapping here
+        -- ["<leader>N"] = "@structure.outer",
+      },
+    },
+
+	},
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+ 
+    -- list of language that will be disabled
+    -- disable = { "c", "rust" },
+
+    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+    -- disable = function(lang, buf)
+    --     local max_filesize = 100 * 1024 -- 100 KB
+    --     local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+    --     if ok and stats and stats.size > max_filesize then
+    --         return true
+    --     end
+    -- end,
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+
+  ident = { enable = true }, 
+  rainbow = {
+    enable = true,
+    extended_mode = true,
+    max_file_lines = nil,
+  },
+
+}
