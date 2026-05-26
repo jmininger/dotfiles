@@ -4,7 +4,6 @@
 # Config version for compatibility and deprecations
 # Fallback value (if you omit the key): config-version = 1
 config-version = 2
-
 # You can use it to add commands that run after AeroSpace startup.
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 # Start JankyBorders for window highlight (like xmonad focusedBorderColor)
@@ -79,9 +78,8 @@ on-mode-changed = []
     inner.vertical =   10
     outer.left =       10
     outer.bottom =     10
-    # outer.top =        10  # use 47 for sketchybar: 37 (bar height) + 10 (gap)
-    # outer.top =        37
-    outer.top =        10
+    outer.top =        47 # 37 (bar height) + 10 (gap)
+    # outer.top =        10
     outer.right =      10
 
 # 'main' binding mode declaration
@@ -175,6 +173,7 @@ on-mode-changed = []
 
     # Misc
     alt-shift-m = 'exec-and-forget shortcuts run "Toggle Notifs"'
+    alt-shift-s = 'exec-and-forget ~/.config/aerospace/toggle-scroll-gaps.sh'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
